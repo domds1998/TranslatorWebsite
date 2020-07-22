@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TranslatorWebsite.Models;
+using TranslatorWebsite.Services;
 
 namespace TranslatorWebsite
 {
@@ -24,6 +27,14 @@ namespace TranslatorWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddTransient<IUsersDbService, MsSqlUsersDbService>();
+            services.AddTransient<IWordsDbService, MsSqlWordsDbService>();
+
+            
+            services.AddDbContext<TranslatorDbContext>(options =>
+            {
+                options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s18747;Integrated Security=True");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
